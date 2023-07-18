@@ -23,6 +23,8 @@ app.get('/', (req, res) => {
 
 const messages = []
 
+const userOnline = {}
+
 io.on('connection', (socket) => {
   console.log('new connction')
 
@@ -33,6 +35,20 @@ io.on('connection', (socket) => {
     messages.push(msg)
     console.log(msg)
     socket.broadcast.emit('chat-message', msg)
+  })
+
+  socket.on('user', ({ user, action }) => {
+    userOnline[socket.id] = user
+    socket.broadcast.emit('user', { user, action })
+  })
+
+  socket.on('disconnect', () => {
+    socket.broadcast.emit('user', {
+      user: userOnline[socket.id],
+      action: false
+    })
+
+    delete userOnline[socket.id] // como borrar la propiedad del objeto
   })
 })
 

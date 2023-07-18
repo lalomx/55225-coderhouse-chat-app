@@ -22,10 +22,25 @@ const appendMessageElement = (user, time, msg) => {
   }, 250)
 }
 
-const createJoinedElement = (user) => {
-  return `<div class="uk-width-1-1 uk-flex joined">
-          <span class="uk-label uk-label-success">${user} se unio</span>
-        </div>`
+const appendUserActionElement = (user, joined) => {
+  const div = document.createElement('div')
+  div.classList.add('uk-width-1-1')
+  div.classList.add('uk-flex')
+  div.classList.add('joined')
+
+  const type = joined ? 'success' : 'danger'
+  const action = joined ? 'unio' : 'salio'
+
+  div.innerHTML = `<span class="uk-label uk-label-${type}">${user} se ${action}</span>`
+
+  messagesEl.appendChild(div)
+
+  // encierro en un set timeout
+  // para que la altura del contenedor se actualice
+  // con el nuevo nodo
+  setTimeout(() => {
+    messagesEl.scrollTo(0, messages.scrollHeight);
+  }, 250)
 }
 
 // logica
@@ -58,7 +73,7 @@ Swal.fire({
   allowOutsideClick: false
 }).then(({ value }) => {
   username = value
-  console.log(username)
+  socket.emit('user', { user: username, action: true })
 
   // aqui voy a renderizar los mensajes actuales del server
 
@@ -71,6 +86,11 @@ Swal.fire({
     // renderizar el mensaje
     appendMessageElement(user, datetime, text)
   })
+
+  socket.on('user', ({ user, action }) => {
+    appendUserActionElement(user, action)
+  })
+
 
   inputElement.addEventListener('keyup', ({ key, target }) => {
     if (key !== 'Enter') {
