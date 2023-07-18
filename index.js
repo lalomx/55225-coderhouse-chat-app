@@ -21,8 +21,19 @@ app.get('/', (req, res) => {
   res.render('home')
 })
 
+const messages = []
+
 io.on('connection', (socket) => {
   console.log('new connction')
+
+  console.log(messages.length)
+
+  socket.emit('chat-messages', messages)
+
+  socket.on('chat-message', ({ user, msg}) => {
+    messages.push({ user, msg })
+    socket.broadcast.emit('chat-message', ({ user, msg }))
+  })
 })
 
 const port = 3000
