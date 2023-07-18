@@ -33,7 +33,27 @@ h1 {
   font-size: 36px;
 }
 
+.chat {
+  max-height: calc(100% - 50px);
+  margin: 0;
+  width: 100%;
+}
 
+#messages {
+  align-items: flex-start;
+  align-content: stretch;
+  overflow-y: scroll;
+  max-height: 95%;
+}
 #messages .joined {
   justify-content: center;
+}
+
+.inputBox {
+  align-self: last baseline;
+}
+
+.inputBox input {
+  padding: 0;
+  width: 100%;
 }
