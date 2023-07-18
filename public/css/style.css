@@ -41,9 +41,9 @@ h1 {
 
 #messages {
   align-items: flex-start;
-  align-content: stretch;
+  align-content: baseline;
   overflow-y: scroll;
-  max-height: 95%;
+  max-height: calc(100% - 50px);
 }
 #messages .joined {
   justify-content: center;
