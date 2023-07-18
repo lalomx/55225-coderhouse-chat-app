@@ -21,10 +21,7 @@ app.get('/', (req, res) => {
   res.render('home')
 })
 
-const messages = [{
-  user: 'Antonio',
-  text: 'Hola a todos'
-}]
+const messages = []
 
 io.on('connection', (socket) => {
   console.log('new connction')

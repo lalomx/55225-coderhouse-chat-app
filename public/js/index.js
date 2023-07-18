@@ -2,6 +2,8 @@ const socket = io()
 const messagesEl = document.querySelector('#messages')
 const inputElement = document.querySelector('.inputBox input')
 
+console.log(new Date())
+
 messagesEl.innerHTML = ""
 // messagesEl.appendChild(NUEVO ELEMENTO) 
 
@@ -60,14 +62,14 @@ Swal.fire({
 
   // aqui voy a renderizar los mensajes actuales del server
 
-  for (const { user, text } of currentMessages) {
+  for (const { user, datetime, text } of currentMessages) {
     // renderizar
-    appendMessageElement(user, '00:00', text)
+    appendMessageElement(user, datetime, text)
   }
 
-  socket.on('chat-message', ({ user, text }) => {
+  socket.on('chat-message', ({ user, datetime, text }) => {
     // renderizar el mensaje
-    appendMessageElement(user, '00:00', text)
+    appendMessageElement(user, datetime, text)
   })
 
   inputElement.addEventListener('keyup', ({ key, target }) => {
@@ -82,12 +84,13 @@ Swal.fire({
     }
 
     // enviar el mensaje al socket
+    const fecha = new Date()
 
-    const msg = { user: username, text: value }
+    const msg = { user: username, datetime: fecha.toLocaleTimeString('en-US'), text: value }
 
     socket.emit('chat-message', msg)
     target.value = ""
-    appendMessageElement(username, '00:00', value)
+    appendMessageElement(username, fecha.toLocaleTimeString('en-US'), value)
   })
 })
 
